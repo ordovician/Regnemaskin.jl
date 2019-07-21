@@ -1,0 +1,4 @@
+name = "Regnemaskin"
+uuid = "cf37d6da-a0bb-11e9-21d8-cbdeb417ff84"
+authors = ["Erik Engheim <erik.engheim@mac.com>"]
+version = "0.1.0"
