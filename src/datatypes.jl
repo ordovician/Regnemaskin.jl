@@ -1,11 +1,10 @@
-export Scalar, Grid, release, retain, cleanup
+export Scalar, Grid, release, retain, cleanup, address
+export scalarpool, gridpool
 
 import Base: size, show
 
-struct Scalar
-   address::Int
-   block::MemBlock
-end
+scalarpool = Pool(1, 10, 1)
+gridpool   = Pool(11, 30, 3*3)
 
 abstract type AbstractGrid end
 
@@ -15,11 +14,35 @@ struct Grid <: AbstractGrid
    block::MemBlock
 end
 
+function Grid(rows::Integer, cols::Integer)
+    blksize = rows*cols
+    if blksize > blocksize(gridpool)
+        error("Grid requires block size of at least &blksize but pool has blocks of $(blocksize(gridpool))")
+    end
+    Grid(rows, cols, MemBlock(gridpool))
+end
+
 struct SubGrid <: AbstractGrid
    parent::AbstractGrid
    skiprow::Int64
    skiprow::Int64 
 end
+
+struct Scalar
+   offset::Int
+   block::MemBlock
+end
+
+function Scalar(A::Grid, i::Integer, j::Integer)
+    offset = index(A, i, j)
+    Scalar(offset, A.block)
+end
+
+function Scalar()
+    Scalar(0, MemBlock(scalarpool))
+end
+
+address(x::Scalar) = x.offset + address(x.block)
 
 size(A::Grid) = A.rows, A.cols
 size(A::SubGrid) = size(A.parent) .- 1

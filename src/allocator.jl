@@ -1,4 +1,4 @@
-export MemBlock, Pool, free, address, retain, release, cleanup
+export MemBlock, Pool, free, address, blocksize, retain, release, cleanup
 
 import Base: show
 
@@ -17,8 +17,6 @@ mutable struct MemPool <: Pool
    blocks::Vector{MemBlock}
    firstfree::MemBlock
 end
-
-pools = Pool[]
 
 function MemBlock(index::Integer)
    MemBlock(0, index, nothing, nothing)
@@ -44,6 +42,8 @@ function address(block::MemBlock)
    blocksz = pool.blocksize
    base + (block.index - 1) * blocksz
 end
+
+blocksize(pool::MemPool) = pool.blocksize
 
 function Pool(address::Integer, size::Integer, blocksize::Integer)
    nblocks = div(size, blocksize)

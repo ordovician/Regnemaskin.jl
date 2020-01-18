@@ -60,11 +60,11 @@ function size(M::SubMatrix)
    w - 1, h - 1 
 end
 
-function determinant(A::AbstractMatrix{T}) where T <: Number
+function determinant(A::AbstractMatrix{<:Number}) 
     a, c, b, d = A
     a*d - b*c 
 end
 
-function matrix_of_minors(A::AbstractMatrix{T}) where T <: Number
+function matrix_of_minors(A::AbstractMatrix{<:Number})
     determinant(A[2:end, 2:end]) 
 end
