@@ -1,4 +1,4 @@
-export Scalar, Grid, release, retain, cleanup, address
+export Scalar, AbstractGrid, Grid, SubGrid, release, retain, cleanup, address
 export scalarpool, gridpool
 
 import Base: size, show
@@ -25,7 +25,7 @@ end
 struct SubGrid <: AbstractGrid
    parent::AbstractGrid
    skiprow::Int64
-   skiprow::Int64 
+   skipcol::Int64 
 end
 
 struct Scalar

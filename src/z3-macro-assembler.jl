@@ -1,6 +1,9 @@
 export emit, asm, index, minors, cofactors!, transpose!, determinant, div!
+export Reg, r1, r2, null
 
 import Base: +, -, *, /, getindex, setindex!, size, show, inv, transpose
+
+using Regnemaskin.Allocator
 
 @enum Reg r1 r2
 
@@ -22,7 +25,7 @@ col(A::SubGrid, j::Integer) = j < A.skipcol ? j : j + 1
 
 getindex(A::SubGrid, i::Integer, j::Integer) = A.parent[row(A, i), col(A, j)]
 
-function setindex!(A::SubMatrix, x, i::Integer, j::Integer)
+function setindex!(A::SubGrid, x, i::Integer, j::Integer)
     A.parent[row(A, i), col(A, j)] = x
 end
 
@@ -91,8 +94,8 @@ end
 
 function minors(A::Grid)
    C = Grid(size(A)...)
-   for i in size(A, 1)
-      for j in size(A, 2)
+   for i in 1:size(A, 1)
+      for j in 1:size(A, 2)
          B = SubGrid(A, i, j)
          C[i, j] = determinant(B)
       end
@@ -108,8 +111,8 @@ function cofactors!(A::Grid)
 end
 
 function transpose!(A::Grid)
-   for i in size(A, 1)
-      for j in size(A, 2)
+   for i in 1:size(A, 1)
+      for j in 1:size(A, 2)
          load(r1, A[i, j])
          load(r2, A[j, i])
          store(r1, A[j, i])
@@ -120,8 +123,8 @@ end
 
 function div!(A::Grid, denom::Scalar)
    load(r2, denom)
-   for i in size(A, 1)
-      for j in size(A, 2)
+   for i in 1:size(A, 1)
+      for j in 1:size(A, 2)
          load(r1, A[i, j])
          div()
          store(r1, A[i, j])

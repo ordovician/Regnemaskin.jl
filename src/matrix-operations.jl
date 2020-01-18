@@ -37,6 +37,8 @@ import Base: getindex, setindex!, size
 
 export SubMatrix, determinant
 
+using Regnemaskin.Allocator
+
 """
 Represents a subset of another Matrix 
 """

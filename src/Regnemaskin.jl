@@ -7,7 +7,7 @@ end
 
 module MacroAssembler
 # include("matrix-operations.jl")
-# include("z3-macro-assembler.jl")
+include("z3-macro-assembler.jl")
 end
 
 module Curta

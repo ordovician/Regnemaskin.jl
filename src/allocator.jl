@@ -15,7 +15,7 @@ mutable struct MemPool <: Pool
    baseaddress::Int
    blocksize::Int
    blocks::Vector{MemBlock}
-   firstfree::MemBlock
+   firstfree::Union{MemBlock, Nothing}
 end
 
 function MemBlock(index::Integer)
@@ -24,10 +24,10 @@ end
 
 function MemBlock(pool::Pool)
    block = pool.firstfree
-   block.pool = pool
    if block == nothing
-      return error("Out of memory")
+       error("Pool out of memory")
    end
+   block.pool = pool
    pool.firstfree = block.next
    block.next = nothing
    block
@@ -98,7 +98,11 @@ end
 function show(io::IO, pool::Pool)
    addr = pool.baseaddress
    blocksize = pool.blocksize
-   nfirst = pool.firstfree.index
+   nfirst = if isnothing(pool.firstfree)
+               nothing
+            else
+                pool.firstfree.index
+            end
    println(io, "Pool(base = $addr, blocksize = $blocksize, first = $nfirst)")
 end
 
