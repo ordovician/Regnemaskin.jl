@@ -6,13 +6,18 @@ import Base: size, show
 scalarpool = Pool(3, 10, 1)
 gridpool   = Pool(11, 30, 3*3)
 
-abstract type AbstractGrid end
+struct Scalar
+   offset::Int
+   block::MemBlock
+end
 
-struct Grid <: AbstractGrid
+struct Grid{T<:Scalar} <: AbstractMatrix{T}
    rows::Int64
    cols::Int64
    block::MemBlock
 end
+
+Grid(rows::Integer, cols::Integer, block::MemBlock) = Grid{Scalar}(rows, cols, block)
 
 function Grid(rows::Integer, cols::Integer)
     blksize = rows*cols
@@ -22,16 +27,15 @@ function Grid(rows::Integer, cols::Integer)
     Grid(rows, cols, MemBlock(gridpool))
 end
 
-struct SubGrid <: AbstractGrid
-   parent::AbstractGrid
+struct SubGrid{T<:Scalar} <: AbstractMatrix{T}
+   parent::AbstractMatrix
    skiprow::Int64
    skipcol::Int64 
 end
 
-struct Scalar
-   offset::Int
-   block::MemBlock
-end
+const AbstractGrid = Union{Grid, SubGrid}
+
+SubGrid(grid::AbstractGrid, skiprow, skipcol) = SubGrid{Scalar}(grid, skiprow, skipcol)
 
 function Scalar(A::Grid, i::Integer, j::Integer)
     offset = index(A, i, j)
