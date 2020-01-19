@@ -3,7 +3,7 @@ export scalarpool, gridpool
 
 import Base: size, show
 
-scalarpool = Pool(1, 10, 1)
+scalarpool = Pool(3, 10, 1)
 gridpool   = Pool(11, 30, 3*3)
 
 abstract type AbstractGrid end

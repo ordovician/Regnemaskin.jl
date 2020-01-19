@@ -5,7 +5,7 @@ import Base: +, -, *, /, getindex, setindex!, size, show, inv, transpose
 
 using Regnemaskin.Allocator
 
-@enum Reg r1 r2
+@enum Reg r1=1 r2
 
 global null = Scalar()
 

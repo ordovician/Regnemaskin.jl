@@ -10,6 +10,10 @@ module MacroAssembler
 include("z3-macro-assembler.jl")
 end
 
+module Simulator
+include("z3-simulator.jl")
+end
+
 module Curta
 include("curta-abacus.jl")
 end
